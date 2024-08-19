@@ -1,14 +1,24 @@
-import time
 import streamlit as st
-
-from repochat.utils import init_session_state
-from repochat.git import git_form
 from repochat.db import vector_db, load_to_db
 from repochat.models import hf_embeddings, code_llama
 from repochat.chain import response_chain
+import os
 
-init_session_state()
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+# Initialize session state keys
+if "db_name" not in st.session_state:
+    st.session_state["db_name"] = "default_db_name"  # Set a default name if needed
+if "db_loaded" not in st.session_state:
+    st.session_state["db_loaded"] = False
+if "messages" not in st.session_state:
+    st.session_state["messages"] = []
+
+# Set up the page
 st.set_page_config(
     page_title="RepoChat",
     page_icon="💻",
@@ -24,26 +34,33 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-try:
-    st.session_state["db_name"], st.session_state['git_form'] = git_form(st.session_state['repo_path'])
+# Allow the user to input the repository path
+repo_path = st.text_input("Enter the path to your local repository:", "")
 
-    if st.session_state['git_form']:
-        with st.spinner('Loading the contents to database. This may take some time...'):
-            st.session_state["chroma_db"] = vector_db(
-                hf_embeddings(),
-                load_to_db(st.session_state['repo_path'])
-            )
-        with st.spinner('Loading model to memory'):
-            st.session_state["qa"] = response_chain( 
-                db=st.session_state["chroma_db"],
-                llm=code_llama()
-            )
+if repo_path:
+    if os.path.exists(repo_path):
+        st.session_state["repo_path"] = repo_path
+        st.session_state["db_name"] = os.path.basename(repo_path)  # Set db_name based on repo path
+        
+        try:
+            with st.spinner('Loading the contents to database. This may take some time...'):
+                st.session_state["chroma_db"] = vector_db(
+                    hf_embeddings(),
+                    load_to_db(st.session_state['repo_path'])
+                )
+            with st.spinner('Loading model to memory'):
+                st.session_state["qa"] = response_chain( 
+                    db=st.session_state["chroma_db"],
+                    llm=code_llama()
+                )
 
-        st.session_state["db_loaded"] = True
-except TypeError:
-    pass
+            st.session_state["db_loaded"] = True
+        except TypeError:
+            st.error("An error occurred while processing the repository.")
+    else:
+        st.error("The provided path does not exist. Please enter a valid path.")
 
-if st.session_state["db_loaded"]:
+if st.session_state.get("db_loaded"):
     for message in st.session_state["messages"]:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -60,7 +77,8 @@ if st.session_state["db_loaded"]:
                 result = st.session_state["qa"](prompt)
             for chunk in result['answer'].split():
                 full_response += chunk + " "
-                time.sleep(0.05)
+                st.sleep(0.05)
                 message_placeholder.markdown(full_response + "▌")
             message_placeholder.markdown(full_response)
         st.session_state["messages"].append({"role": "assistant", "content": full_response})
+
