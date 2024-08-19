@@ -1,9 +1,14 @@
 import os
 import shutil
 import streamlit as st
-from langchain.vectorstores import Chroma
+# Old import (deprecated)
+# from langchain.vectorstores import Chroma
+# New import (recommended)
+from langchain_community.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import NotebookLoader, TextLoader
+
+from langchain_community.vectorstores import Chroma
 
 def vector_db(embeddings, code):
     collection_name = "db_collection"
