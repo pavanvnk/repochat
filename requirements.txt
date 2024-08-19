@@ -1,6 +1,8 @@
 requests==2.31.0
 streamlit==1.28.0
 langchain==0.0.313
+langchain_community.vectorstores==0.0.20
 chromadb==0.4.14
 tiktoken==0.5.1
 sentence-transformers==2.2.2
+openai==1.41.0
