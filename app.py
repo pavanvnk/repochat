@@ -4,6 +4,7 @@ from repochat.models import hf_embeddings, code_llama
 from repochat.chain import response_chain
 import os
 
+# Load the openai key
 import os
 from dotenv import load_dotenv
 
