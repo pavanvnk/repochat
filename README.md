@@ -23,7 +23,7 @@ The [cloud](https://github.com/pnkvalavala/repochat/tree/cloud) branch of Repoch
 ## Features
 
 - Choose your preferred Language Model:
-  - OpenAI GPT-3.5-turbo
+  - OpenAI GPT models
   - Hugging Face Model (with custom endpoint)
 
 - Choose between two methods for calculating embeddings:
