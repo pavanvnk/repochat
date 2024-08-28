@@ -15,11 +15,11 @@ https://github.com/pnkvalavala/repochat/assets/108526358/91819459-ddbf-4985-ab84
 
 ## Branches
 
-Repochat offers two branches with distinct functionalities:
+Repochat offers 2 branches with distinct functionalities:
 
 ### Main Branch
 
-The [main](https://github.com/pnkvalavala/repochat) branch of Repochat is designed to run entirely on your local machine. This version of Repochat doesn't rely on external API calls and offers greater control over your data and processing. If you're looking for a self-contained solution, the `main` branch is the way to go.
+The [main](https://github.com/pnkvalavala/repochat) branch of Repochat is designed to run entirely on your local machine. This version of Repochat doesn't rely on external API calls and offers greater control over your data. If you're looking for a self-contained solution, the `main` branch is the way to go.
 
 ### Cloud Branch
 
